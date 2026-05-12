@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme {
+  /* Base */
+  --color-background: #05010a; /* deep black */
+  --color-surface: #0f0620; /* cards/nav */
+  --color-surface-hover: #1e0c3a; /* hover state for cards/nav */
+
+    /* Extra card / modal variations (NEW) */
+  --color-card: #120624;              /* default card (slightly lighter) */
+  --color-card-hover: #1a0a33;        /* hover card */
+  --color-card-elevated: #1f0d3f;     /* higher elevation */
+  --color-card-modal: #260f4d;        /* modal / dialog */
+  --color-card-glass: rgba(18, 6, 36, 0.7); /* glass effect */
+
+  /* Primary neon (purple) */
+  --color-primary: #a855f7; /* main brand */
+  --color-primary-glow: #c084fc; /* hover / glow */
+
+  /* Secondary neon (blue) */
+  --color-secondary: #22d3ee; /* accent */
+  --color-secondary-glow: #67e8f9;
+
+  /* Text */
+            /* Text */
+            --color-text: #f5f3ff;              /* primary text */
+            --color-text-muted: #a1a1aa;        /* secondary text */
+          
+            /* Additional text hierarchy */
+            --color-text-subtle: #71717a;       /* disabled / low emphasis */
+            --color-text-disabled: #52525b;     /* inactive elements */
+          
+            /* Emphasis */
+            --color-text-emphasis: #ffffff;     /* strong highlight text */
+            --color-text-accent: #a855f7;       /* primary brand text */
+            --color-text-secondary-accent: #22d3ee; /* secondary brand text */
+          
+            /* State text */
+            --color-text-success: #4ade80;
+            --color-text-warning: #facc15;
+            --color-text-danger: #fb7185;
+          
+            /* Soft tinted text (for subtle UI accents) */
+            --color-text-accent-soft: rgba(168, 85, 247, 0.8);
+            --color-text-secondary-soft: rgba(34, 211, 238, 0.8);
+
+  /* States */
+  --color-danger: #fb7185; /* errors */
+  --color-danger-glow: #f87171; /* error glow */
+  --color-success: #4ade80; /* success */
+  --color-success-glow: #86efac; /* success glow */
+}
+
+@keyframes neon-pulse {
+  0%, 100% {
+    text-shadow: 2px 20px 10px var(--color-primary);
+  }
+
+  50% {
+    text-shadow: 2px 20px 10px var(--color-secondary);
+  }
+}
+
+.animate-pulse-color {
+  animation: neon-pulse 4s ease-in-out infinite;
+  text-shadow: 0 0 2px var(--color-primary-glow);
+}
+
+
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.cursor::after {
+  content: "|";
+  color: var(--color-primary);
+  margin-left: 4px;
+  animation: blink 1s step-end infinite;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+} */
