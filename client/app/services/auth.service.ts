@@ -25,8 +25,12 @@ export const logout = () => {
   });
 };
 
-export const getMe = () => {
-  return api("/users/me", {
-    method: "GET"
-  });
+export const getMe = async () => {
+  try {
+    return await api("/users/me", {
+      method: "GET",
+    });
+  } catch {
+    return null;
+  }
 };

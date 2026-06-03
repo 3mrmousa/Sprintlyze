@@ -26,10 +26,11 @@ function Register() {
 
     try {
       await register(firstName, lastName, email, password);
-      router.push("/tasks");
+      router.push("/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err?.errors?.[0]?.msg || err?.message || "Something went wrong");
+    } catch (error: any) {
+      console.error("Register error:", error);
+      setError(error.message || "Register failed");
     }
   };
 
@@ -68,6 +69,7 @@ function Register() {
               type="password"
               name="password"
               placeholder="Password"
+              autoComplete="new-password"
               className="bg-background text-text placeholder:text-text-muted border border-text-muted rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>

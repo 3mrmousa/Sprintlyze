@@ -51,6 +51,7 @@ function Login() {
               type="password"
               placeholder="Password"
               name="password"
+              autoComplete="current-password"
               className="bg-background text-text placeholder:text-text-muted border border-text-muted rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>

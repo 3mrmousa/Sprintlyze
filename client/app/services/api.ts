@@ -20,7 +20,17 @@ export const api = async (endpoint: string, options: RequestInit = {}) => {
     },
   });
 
-  const data = await res.json();
-  if (!res.ok) throw data;
+  let data;
+
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
+    throw data || { message: "Request failed" };
+  }
+
   return data;
 };
