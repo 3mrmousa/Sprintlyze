@@ -1,4 +1,4 @@
-import app, { initDB } from "../index.ts";
+import app, { initDB } from "../index";
 
 export default async function handler(req: any, res: any) {
   try {
