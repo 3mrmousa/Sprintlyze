@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon --watch . --ext ts,json --exec \"tsx --no-cache index.ts\""
+    "dev": "nodemon --watch . --ext ts,json --exec \"tsx --no-cache index.ts\"",
+    "start": "tsx index.ts"
   },
   "keywords": [],
   "author": "",

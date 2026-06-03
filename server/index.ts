@@ -8,9 +8,16 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//     credentials: true,
+//   }),
+// );
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
     credentials: true,
   }),
 );
@@ -47,18 +54,47 @@ app.use(
   },
 );
 
-const startServer = async () => {
-  try {
-    await connectDB(process.env.MONGODB_URI as string);
+// const startServer = async () => {
+//   try {
+//     await connectDB(process.env.MONGODB_URI as string);
 
-    const port = process.env.PORT || 3002;
-    app.listen(port, () => {
-      console.log(`server is listening on port ${port}...`);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
+//     const port = process.env.PORT || 3002;
+//     app.listen(port, () => {
+//       console.log(`server is listening on port ${port}...`);
+//     });
+//   } catch (error) {
+//     console.error("Failed to start server:", error);
+//     process.exit(1);
+//   }
+// };
+
+// startServer();
+let isConnected = false;
+
+export const initDB = async () => {
+  if (!isConnected) {
+    await connectDB(process.env.MONGODB_URI as string);
+    isConnected = true;
   }
 };
 
-startServer();
+// Local development only
+if (process.env.NODE_ENV !== "production") {
+  const startServer = async () => {
+    try {
+      await initDB();
+
+      const port = process.env.PORT || 3002;
+      app.listen(port, () => {
+        console.log(`server is listening on port ${port}...`);
+      });
+    } catch (error) {
+      console.error("Failed to start server:", error);
+      process.exit(1);
+    }
+  };
+
+  startServer();
+}
+
+export default app;
