@@ -9,19 +9,18 @@ function Nav() {
   const pathname = usePathname();
 
   useEffect(() => {
-    getMe()
-      .then(() => setIsLoggedIn(true))
-      .catch(() => setIsLoggedIn(false));
+    getMe().then((user) => {
+      setIsLoggedIn(Boolean(user));
+    });
   }, [pathname]);
 
   const router = useRouter();
-  const myLogout = async () => {
+
+  const handleLogout = async () => {
     await logout();
-  };
-  const handleLogout = () => {
-    myLogout();
     setIsLoggedIn(false);
     router.push("/");
+    router.refresh();
   };
 
   return (

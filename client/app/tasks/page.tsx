@@ -1,43 +1,82 @@
+"use client";
+
 import Link from "next/link";
 import TasksAddAndManage from "../components/tasks-page/TasksAddAndManage";
-import { getMe } from "../services/auth.service";
 import {
   getCompletedTasks,
   getNotCompletedTasks,
   getTasks,
 } from "../services/task.service";
 import ShowTasks from "../components/tasks-page/ShowTasks";
-import { Metadata } from "next";
+import { getMe } from "../services/auth.service";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export const metadata: Metadata = {
-  title: "Tasks",
-  description: "View and manage all your tasks",
-};
+function Tasks() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-async function Tasks({
-  searchParams,
-}: {
-  searchParams: Promise<{ filter?: string }>;
-}) {
-  const user = await getMe();
+  const filter = searchParams.get("filter") || "all";
 
-  const { filter = "all" } = await searchParams;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [user, setUser] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [tasks, setTasks] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  let tasks;
-  if (filter === "done") {
-    tasks = await getCompletedTasks();
-  } else if (filter === "notdone") {
-    tasks = await getNotCompletedTasks();
-  } else {
-    tasks = await getTasks();
+  useEffect(() => {
+    const loadPage = async () => {
+      try {
+        const userResponse = await getMe();
+
+        if (!userResponse) {
+          router.push("/login");
+          return;
+        }
+
+        setUser(userResponse.data.user);
+
+        let tasksResponse;
+
+        if (filter === "done") {
+          tasksResponse = await getCompletedTasks();
+        } else if (filter === "notdone") {
+          tasksResponse = await getNotCompletedTasks();
+        } else {
+          tasksResponse = await getTasks();
+        }
+
+        setTasks(tasksResponse);
+      } catch (error) {
+        console.error("Failed to load tasks page:", error);
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPage();
+  }, [filter, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-text">
+        Loading tasks...
+      </div>
+    );
+  }
+
+  if (!user || !tasks) {
+    return null;
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center text-text pt-30 gap-2">
       <div className="bg-surface p-8 rounded-lg shadow-lg flex flex-col items-center gap-4 w-full max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold">
-          Welcome {user.data.user.firstName} {user.data.user.lastName}
+          Welcome {user.firstName} {user.lastName}
         </h1>
+
         <TasksAddAndManage />
       </div>
 
@@ -54,6 +93,7 @@ async function Tasks({
           >
             All
           </Link>
+
           <Link
             href="/tasks?filter=done"
             className={`bg-success/20 hover:bg-success-glow shadow-success text-success 
@@ -63,6 +103,7 @@ async function Tasks({
           >
             Done
           </Link>
+
           <Link
             href="/tasks?filter=notdone"
             className={`bg-danger/20 hover:bg-danger-glow shadow-danger text-danger 

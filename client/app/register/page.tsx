@@ -27,6 +27,7 @@ function Register() {
     try {
       await register(firstName, lastName, email, password);
       router.push("/");
+      router.refresh();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Register error:", error);
@@ -39,7 +40,6 @@ function Register() {
       className="bg-background text-text min-h-screen 
     flex flex-col items-center justify-center gap-2 px-8 md:px-0"
     >
-      {error && <p className="text-danger text-sm mt-2 text-center">{error}</p>}
       <div className="bg-surface p-8 rounded-lg shadow-lg flex flex-col items-center gap-4">
         <h1 className="text-3xl font-bold">Register</h1>
         <p className="text-text-muted text-center">
@@ -89,6 +89,7 @@ function Register() {
           </Link>
         </div>
       </div>
+      {error && <p className="text-danger text-sm mt-2 text-center">{error}</p>}
     </div>
   );
 }

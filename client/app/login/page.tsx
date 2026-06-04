@@ -22,6 +22,7 @@ function Login() {
     try {
       await login(email, password);
       router.push("/tasks");
+      router.refresh();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err?.errors?.[0]?.msg || err?.message || "Something went wrong");
@@ -30,7 +31,6 @@ function Login() {
 
   return (
     <div className="bg-background px-8 md:px-0 text-text min-h-screen flex flex-col items-center justify-center gap-2">
-      {error && <p className="text-danger text-sm mt-2 text-center">{error}</p>}
       <div className="bg-surface p-8 rounded-lg shadow-lg flex flex-col items-center gap-4">
         <h1 className="text-3xl font-bold">Login</h1>
 
@@ -72,6 +72,7 @@ function Login() {
           </Link>
         </p>
       </div>
+      {error && <p className="text-danger text-sm mt-2 text-center">{error}</p>}
     </div>
   );
 }
