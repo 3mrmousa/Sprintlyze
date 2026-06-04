@@ -108,12 +108,11 @@ const login = asyncHandler(
 );
 
 const logout = asyncHandler(async (req: Request, res: Response) => {
-  res.cookie("token", "", {
+  res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
-    expires: new Date(0),
   });
 
   res.status(200).json({
