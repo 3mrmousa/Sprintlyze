@@ -12,7 +12,19 @@ const clientUrl = process.env.CLIENT_URL?.replace(/\/$/, "");
 
 app.use(
   cors({
-    origin: clientUrl || "http://localhost:3000",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      if (
+        origin === clientUrl ||
+        origin === "http://localhost:3000" ||
+        origin.endsWith(".vercel.app")
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
