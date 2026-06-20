@@ -8,13 +8,6 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000",
-//     credentials: true,
-//   }),
-// );
-
 const clientUrl = process.env.CLIENT_URL?.replace(/\/$/, "");
 
 app.use(
@@ -56,27 +49,18 @@ app.use(
   },
 );
 
-// const startServer = async () => {
-//   try {
-//     await connectDB(process.env.MONGODB_URI as string);
-
-//     const port = process.env.PORT || 3002;
-//     app.listen(port, () => {
-//       console.log(`server is listening on port ${port}...`);
-//     });
-//   } catch (error) {
-//     console.error("Failed to start server:", error);
-//     process.exit(1);
-//   }
-// };
-
-// startServer();
-let isConnected = false;
+let dbConnectionPromise: Promise<void> | null = null;
 
 export const initDB = async () => {
-  if (!isConnected) {
-    await connectDB(process.env.MONGODB_URI as string);
-    isConnected = true;
+  if (!dbConnectionPromise) {
+    dbConnectionPromise = connectDB(process.env.MONGODB_URI as string);
+  }
+
+  try {
+    await dbConnectionPromise;
+  } catch (error) {
+    dbConnectionPromise = null;
+    throw error;
   }
 };
 

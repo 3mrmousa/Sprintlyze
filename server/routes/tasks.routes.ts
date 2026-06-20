@@ -19,28 +19,24 @@ import { protect } from "../middlewares/auth.middleware";
 
 const tasksRouter = express.Router();
 
+tasksRouter.use(protect);
+
 tasksRouter
   .route("/")
-  .get(protect, getAllTasks)
-  .post(protect, createTaskValidatorRules, validateResult, postTask);
+  .get(getAllTasks)
+  .post(createTaskValidatorRules, validateResult, postTask);
 
-tasksRouter.route("/completed").get(protect, getCompleted);
-tasksRouter.route("/not-completed").get(protect, getNotCompleted);
+tasksRouter.route("/completed").get(getCompleted);
+tasksRouter.route("/not-completed").get(getNotCompleted);
 
 tasksRouter
   .route("/:id")
-  .get(protect, idValidatorRules, getTask)
-  .patch(
-    protect,
-    idValidatorRules,
-    updateTaskValidatorRules,
-    validateResult,
-    updateTask,
-  )
-  .delete(protect, idValidatorRules, deleteTask);
+  .get(idValidatorRules, validateResult, getTask)
+  .patch(idValidatorRules, updateTaskValidatorRules, validateResult, updateTask)
+  .delete(idValidatorRules, validateResult, deleteTask);
 
 tasksRouter
   .route("/parentWithChildren/:id")
-  .get(protect, idValidatorRules, getParentTask);
+  .get(idValidatorRules, validateResult, getParentTask);
 
 export default tasksRouter;

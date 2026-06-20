@@ -20,26 +20,18 @@ import { protect } from "../middlewares/auth.middleware";
 
 const usersRouter = express.Router();
 
-usersRouter.route("/").get(protect, getAllUsers);
-
 usersRouter.post("/register", registerValidatorRules, validateResult, register);
-
 usersRouter.post("/login", loginValidatorRules, validateResult, login);
 
-usersRouter.post("/logout", protect, logout);
+usersRouter.use(protect);
 
-usersRouter.get("/me", protect, getMe);
-
+usersRouter.route("/").get(getAllUsers);
+usersRouter.post("/logout", logout);
+usersRouter.get("/me", getMe);
 usersRouter
   .route("/:id")
-  .get(idValidatorRules, protect, getUser)
-  .patch(
-    idValidatorRules,
-    protect,
-    updateUserValidatorRules,
-    validateResult,
-    updateUser,
-  )
-  .delete(idValidatorRules, protect, deleteUser);
+  .get(idValidatorRules, validateResult, getUser)
+  .patch(idValidatorRules, updateUserValidatorRules, validateResult, updateUser)
+  .delete(idValidatorRules, validateResult, deleteUser);
 
 export default usersRouter;
