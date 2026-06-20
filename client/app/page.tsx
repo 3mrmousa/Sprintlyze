@@ -1,18 +1,12 @@
-import Link from "next/dist/client/link";
+import Link from "next/link";
 import Button from "./components/shared/Button";
 import CodeBoxStyle from "./components/text/CodeBoxStyle";
 import { getMe } from "./services/auth.service";
 
 export default async function Home() {
 
-  let isLoggedin = false;
-
-  try {
-    await getMe();
-    isLoggedin = true;
-  } catch {
-    isLoggedin = false;
-  }
+  const user = await getMe();
+  const isLoggedin = Boolean(user);
 
   return (
     <div

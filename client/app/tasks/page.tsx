@@ -56,7 +56,8 @@ function Tasks() {
     };
 
     loadPage();
-  }, [filter, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   if (loading) {
     return (

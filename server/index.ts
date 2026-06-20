@@ -64,8 +64,7 @@ export const initDB = async () => {
   }
 };
 
-// Local development only
-if (process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV === "development") {
   const startServer = async () => {
     try {
       await initDB();
