@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { isVercel } from "./utils/env";
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./database/connect";
@@ -76,7 +77,7 @@ export const initDB = async () => {
   }
 };
 
-if (process.env.NODE_ENV === "development") {
+if (!isVercel) {
   const startServer = async () => {
     try {
       await initDB();

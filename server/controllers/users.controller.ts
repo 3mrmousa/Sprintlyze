@@ -5,6 +5,12 @@ import { AppError } from "../utils/appError";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/jwt";
 import { AuthRequest } from "../types/authRequest";
+import { isVercel } from "../utils/env";
+
+const cookieSecurityOptions = {
+  secure: isVercel,
+  sameSite: (isVercel ? "none" : "lax") as "none" | "lax",
+};
 
 const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   const users = await UserModel.find().select("-__v -password");
@@ -68,8 +74,7 @@ const register = asyncHandler(
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      ...cookieSecurityOptions,
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -123,8 +128,7 @@ const login = asyncHandler(
 const logout = asyncHandler(async (req: Request, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    ...cookieSecurityOptions,
     path: "/",
   });
 
@@ -139,15 +143,10 @@ const getMe = asyncHandler(
     if (!req.user?.id) {
       return next(new AppError("Not authenticated", 401));
     }
-
     const user = await UserModel.findById(req.user.id).select("-password -__v");
-
     if (!user) {
       return next(new AppError("User not found", 404));
     }
-
-    console.log("USER ID:", req.user);
-
     res.status(200).json({ status: "success", data: { user } });
   },
 );

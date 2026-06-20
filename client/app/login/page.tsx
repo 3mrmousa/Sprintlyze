@@ -25,6 +25,7 @@ function Login() {
       router.refresh();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      console.log(err);
       setError(err?.errors?.[0]?.msg || err?.message || "Something went wrong");
     }
   };
