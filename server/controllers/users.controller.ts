@@ -49,6 +49,15 @@ const deleteUser = asyncHandler(
 
 const register = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    if (!process.env.JWT_SECRET) {
+      return next(new AppError("Server configuration error", 500));
+    }
+
+    const existingUser = await UserModel.findOne({ email: req.body.email });
+    if (existingUser) {
+      return next(new AppError("Email already in use", 409));
+    }
+
     const user = await UserModel.create(req.body);
 
     const token = generateToken(user._id.toString());
@@ -75,6 +84,10 @@ const register = asyncHandler(
 
 const login = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    if (!process.env.JWT_SECRET) {
+      return next(new AppError("Server configuration error", 500));
+    }
+
     const { email, password } = req.body;
 
     const user = await UserModel.findOne({ email });
